@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Game Random Gỗ</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#121212;
+    color:white;
+    text-align:center;
+}
+
+.box{
+    background:#1f1f1f;
+    padding:30px;
+    width:350px;
+    margin:auto;
+    margin-top:80px;
+    border-radius:15px;
+}
+
+button{
+    padding:10px 20px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.random{background:#4CAF50;color:white;}
+.nap{background:#2196F3;color:white;}
+
+#spin{
+    font-size:30px;
+    margin:20px;
+}
+
+.leaderboard{
+    margin-top:30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>🎰 Random Gỗ</h1>
+
+<h2 id="wood">Gỗ: 0 🪵</h2>
+
+<div id="spin">❔</div>
+
+<button class="random" onclick="randomWood()">Random (5 gỗ)</button>
+
+<br><br>
+
+<button class="nap" onclick="napWood()">Nạp +50 gỗ</button>
+
+<div id="result"></div>
+
+<div class="leaderboard">
+<h3>🏆 Điểm cao nhất</h3>
+<p id="topScore">0</p>
+</div>
+
+</div>
+
+<script>
+
+let wood = localStorage.getItem("wood");
+let topScore = localStorage.getItem("topScore");
+
+if(wood == null) wood = 20;
+if(topScore == null) topScore = 0;
+
+wood = parseInt(wood);
+topScore = parseInt(topScore);
+
+updateUI();
+
+function updateUI(){
+document.getElementById("wood").innerText = "Gỗ: " + wood + " 🪵";
+document.getElementById("topScore").innerText = topScore;
+localStorage.setItem("wood", wood);
+}
+
+function napWood(){
+wood += 50;
+updateUI();
+}
+
+function randomWood(){
+
+if(wood < 5){
+alert("Không đủ gỗ!");
+return;
+}
+
+wood -= 5;
+
+let spin = document.getElementById("spin");
+
+let icons = ["❌","x2","x3"];
+let i = 0;
+
+let animation = setInterval(()=>{
+spin.innerText = icons[Math.floor(Math.random()*icons.length)];
+i++;
+
+if(i > 20){
+clearInterval(animation);
+result();
+}
+
+},100);
+
+}
+
+function result(){
+
+let random = Math.random();
+
+if(random < 0.5){
+
+document.getElementById("spin").innerText = "❌";
+document.getElementById("result").innerText = "💀 Mất gỗ";
+
+}
+
+else if(random < 0.85){
+
+let gain = 10;
+
+wood += gain;
+
+document.getElementById("spin").innerText = "x2";
+document.getElementById("result").innerText = "🔥 X2! +" + gain + " gỗ";
+
+}
+
+else{
+
+let gain = 15;
+
+wood += gain;
+
+document.getElementById("spin").innerText = "x3";
+document.getElementById("result").innerText = "🚀 X3! +" + gain + " gỗ";
+
+}
+
+if(wood > topScore){
+topScore = wood;
+localStorage.setItem("topScore", topScore);
+}
+
+updateUI();
+
+}
+
+</script>
+
+</body>
+</html>
